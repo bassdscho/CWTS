@@ -7,5 +7,3 @@ void code_unreachable_1(int i)
 	i++;
 }
 
-
-int main() { return 0; } // to make the linker happy
