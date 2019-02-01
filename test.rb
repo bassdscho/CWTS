@@ -27,14 +27,15 @@ tests = 0
 fails = []
 Dir.glob('Tests/*.cpp') do |cpp_file|
 	stdout, stderr, status = Open3.capture3("#{compile_command} #{cpp_file} Tests/main.cxx")
+	if compile_command.start_with? "cl " # space to not detect clang
+		stderr = stdout
+	end
 	tests += 1
 	tabs = "\t"
 	if stderr.include? "warning"
 		puts "[OK]".green + tabs + "#{stderr}".yellow
 	elsif stderr.include? "error"
 		puts "[OK]".green + tabs + "#{stderr}".red
-	elsif stderr.length > 0
-		puts "[OK]".green + tabs + "#{stderr}".blue
 	else
 		puts "[FAIL]".red + tabs + "#{File.basename(cpp_file)}" + " no warnings / errors generated!".pink
 		fails << File.basename(cpp_file)
